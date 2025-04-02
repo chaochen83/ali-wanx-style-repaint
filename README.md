@@ -17,9 +17,9 @@ Use [fastapi](https://github.com/fastapi/fastapi) for API endpoints, and [showap
 
    you should see results like
 
-```
+```json
 {
 "result": "success",
 "result_image_url": "https://dashscope-result-wlcb.oss-cn-wulanchabu.aliyuncs.com/1d/5a/20250402/81750fc9/20250402135400426812_refstyle_o7penmv13r.jpg?Expires=1743659644&OSSAccessKeyId=LTAI5tQZd8AEcZX6KZV4G8qL&Signature=eKgJ2Ws6RY4TD51NF5pxxbIuQV0%3D"
 }
-```
+
