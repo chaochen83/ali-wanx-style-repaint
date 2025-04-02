@@ -1,5 +1,7 @@
 # ali-wanx-style-repaint
-Use Alibaba Wanx API to convert image to a different style, say Ghibli.
+Use [Alibaba Wanx API](https://help.aliyun.com/zh/model-studio/portrait-style-redraw-api-reference?spm=a2c4g.11186623.0.0.7cfc19f52ayqsA#cc8ce627b00nu) to convert image to a different style, say Ghibli.
+
+**Notice: this API may be restricted to Mainland China only.**
 
 Use [fastapi](https://github.com/fastapi/fastapi) for API endpoints, and [showapi](https://github.com/laurentS/slowapi?tab=readme-ov-file) for API rate limitaion.
 
