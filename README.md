@@ -17,7 +17,7 @@ Use [fastapi](https://github.com/fastapi/fastapi) for API endpoints, and [showap
 
 5. Go to e.g: http://127.0.0.1:8000/style/1?origin_image_url=https://public-vigen-video.oss-cn-shanghai.aliyuncs.com/public/dashscope/test.png,
 
-   you should see results like
+   you should see results like:
 
 ```json
 {
