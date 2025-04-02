@@ -1,7 +1,7 @@
 # ali-wanx-style-repaint
 Use Alibaba Wanx API to convert image to a different style, say Ghibli.
 
-Use [fastapi](https://github.com/fastapi/fastapi) for API endpoints, use [showapi](https://github.com/laurentS/slowapi?tab=readme-ov-file) for API rate limitaion.
+Use [fastapi](https://github.com/fastapi/fastapi) for API endpoints, and [showapi](https://github.com/laurentS/slowapi?tab=readme-ov-file) for API rate limitaion.
 
 
 # Usage
