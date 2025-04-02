@@ -5,8 +5,21 @@ import httpx
 import os
 from dotenv import load_dotenv
 
+from typing import Union
+from fastapi import FastAPI, Request
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
 # Load environment variables from .env file
 load_dotenv()
+
+limiter = Limiter(key_func=get_remote_address)
+app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 
 # Access variables
 API_KEY: Final = os.getenv("API_KEY")
@@ -16,7 +29,14 @@ CALLBACK_URL: Final = "https://dashscope.aliyuncs.com/api/v1/tasks/"
 # Change this to the image url that you want to ref its style:
 style_ref_url = "https://pics6.baidu.com/feed/29381f30e924b899f3543621c3ae869a0b7bf6f3.jpeg@f_auto?token=cfc086a746067ded623308bf9a673c79"
 # Change this to the original image's url:
-origin_image_url = "https://public-vigen-video.oss-cn-shanghai.aliyuncs.com/public/dashscope/test.png"
+# origin_image_url = "https://public-vigen-video.oss-cn-shanghai.aliyuncs.com/public/dashscope/test.png"
+
+
+@app.get("/")
+@limiter.limit("5/minute")
+async def homepage(request: Request):
+    return {"hello": "world"}
+
 
 async def poll_status(task_id: str, max_retries: int = 5, delay: float = 3.0):
     """异步轮询查询状态"""
@@ -30,14 +50,18 @@ async def poll_status(task_id: str, max_retries: int = 5, delay: float = 3.0):
                     response_json = response.json()
                     print(f"Response: {response_json}\n")
                     if response_json['output']['task_status'] == "SUCCEEDED":
-                        return response_json['output']['results'][0]['url']  # 任务完成，返回数据
+                        # 任务成功
+                        result_image_url = response_json['output']['results'][0]['url']
+                        return {"result": "success", "result_image_url": result_image_url}
                 await asyncio.sleep(delay)  # 休眠后重试
             return {"error": "Timeout or failed"}
     except httpx.RequestError as e:
         return(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
 
-    
-async def start_request():
+
+@app.get("/style/{style_id}")
+@limiter.limit("5/minute")
+async def start_request(request: Request, style_id: int, origin_image_url: Union[str, None] = None):
     """发送请求并异步轮询"""
     try:
         async with httpx.AsyncClient(headers={"Authorization": "Bearer " + API_KEY, "X-DashScope-Async": "enable"}) as client:
@@ -67,5 +91,5 @@ async def start_request():
         return(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
     
 # This is the target image's url:
-result_image_url = asyncio.run(start_request())
-print(result_image_url)
+# result_image_url = asyncio.run(start_request())
+# print(result_image_url)
